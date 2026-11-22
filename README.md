@@ -21,11 +21,12 @@ Screenshots use simulated demo answers.
 | **No memorising** | Most items are generated (matrices, mental rotation, number and letter series, ordering, digit span, symbol tasks). Static verbal and logic items are tracked as seen across both modes |
 | **Stats** | Radar chart (puzzles vs full test), puzzle IQ line, full-test bars with 95% range, per-domain table |
 | **Weak spots** | Per question type: answers, accuracy, average difficulty level, seconds, timeout rate. Plus a time-of-day split |
-| **Export / import** | JSON backup, CSV with one row per answer, JSON import |
+| **Export / import** | JSON backup, CSV with one row per answer. Import from the Stats tab or More: merge into current data or replace it |
+| **Languages** | English and Brazilian Portuguese, switch with the EN / PT pill on Home or in More. First run follows the phone language. Portuguese verbal and logic items are new, written for PT, and not yet calibrated, so treat PT scores as rougher than EN |
 
 ## Install
 
-**Android (APK):** download [`releases/IQ-Lab-v1.1.apk`](releases/IQ-Lab-v1.1.apk), open it, allow installs from that source once. Works offline. Scores stay on the device. Uninstalling or clearing app data deletes them, so export now and then.
+**Android (APK):** download [`releases/IQ-Lab-v1.2.apk`](releases/IQ-Lab-v1.2.apk), open it, allow installs from that source once. Works offline. Scores stay on the device. Uninstalling or clearing app data deletes them, so export now and then.
 
 **Browser (any phone or computer, including iPhone):** open https://matheusgr76.github.io/IQ_lab/ and use "Add to Home screen" in the browser menu. Scores are saved in that browser's local storage. To run it locally, open `web/index.html`.
 

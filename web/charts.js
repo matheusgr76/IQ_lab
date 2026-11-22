@@ -1,5 +1,5 @@
 // SVG charts: radar (Lichess-style), line/area, bars. All colours come from CSS variables.
-const AX=['Verbal','Visual','Fluid','Memory','Speed'];
+const AXK=['Verbal','Visual','Fluid','Memory','Speed'];const axl=i=>t(AXK[i]);
 const LO=55,HI=145;
 let _gid=0;
 function radarSVG(series){
@@ -15,12 +15,12 @@ function radarSVG(series){
     g+=`<polygon points="${p.map(q=>q.map(x=>x.toFixed(1)).join(',')).join(' ')}" style="fill:${s.color};fill-opacity:.22;stroke:${s.color};stroke-width:2.5;stroke-linejoin:round"/>`;
     p.forEach((q,i)=>{if(s.vals[i]!=null)g+=`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="5.5" style="fill:${s.color}"/>`});
   });
-  for(let i=0;i<n;i++){const a=ang(i),x=cx+(R+26)*Math.cos(a),y=cy+(R+22)*Math.sin(a)+4;g+=`<text class="ra" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${AX[i]}</text>`}
+  for(let i=0;i<n;i++){const a=ang(i),x=cx+(R+26)*Math.cos(a),y=cy+(R+22)*Math.sin(a)+4;g+=`<text class="ra" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${axl(i)}</text>`}
   return`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Domain radar chart">${g}</svg>`;
 }
 function lineSVG(ys,o={}){
   const W=o.w||340,H=o.h||150,pl=o.axes===false?6:30,pr=8,pt=10,pb=o.axes===false?6:18;
-  if(ys.length<2)return`<div class="empty" style="height:${H}px">Answer a few puzzles to see your curve.</div>`;
+  if(ys.length<2)return`<div class="empty" style="height:${H}px">${t('Answer a few puzzles to see your curve.')}</div>`;
   let lo=Math.min(...ys),hi=Math.max(...ys);const pad=Math.max(3,(hi-lo)*.15);lo=Math.floor(lo-pad);hi=Math.ceil(hi+pad);
   const X=i=>pl+i/(ys.length-1)*(W-pl-pr),Y=v=>pt+(1-(v-lo)/(hi-lo))*(H-pt-pb);
   const id='g'+(++_gid),pts=ys.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1));
@@ -34,7 +34,7 @@ function lineSVG(ys,o={}){
   return`<svg class="chart" viewBox="0 0 ${W} ${H}">${g}</svg>`;
 }
 function barsSVG(items){
-  if(!items.length)return`<div class="empty" style="height:150px">Take the full test to see your scores here.</div>`;
+  if(!items.length)return`<div class="empty" style="height:150px">${t('Take the full test to see your scores here.')}</div>`;
   const W=340,H=190,pl=30,pb=26,pt=14,lo=55,hi=145,Y=v=>pt+(1-(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo))*(H-pt-pb);
   const bw=Math.min(36,(W-pl-8)/items.length-8);let g='';
   [70,100,130].forEach(v=>g+=`<line class="rg" x1="${pl}" x2="${W-4}" y1="${Y(v)}" y2="${Y(v)}"/><text class="rl" x="2" y="${Y(v)+3}">${v}</text>`);

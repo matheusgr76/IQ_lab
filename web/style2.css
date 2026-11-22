@@ -22,7 +22,7 @@ body{background:var(--bg)}
 .meter .dots i.on{width:10px;height:10px;opacity:1}
 .meter b{display:block;font:400 22px var(--fb)}.meter span{font-size:12px;color:var(--mut)}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tile{background:var(--tile);border:0;border-radius:20px;padding:18px 16px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;text-align:left;color:var(--ink);font:inherit;cursor:pointer;position:relative}
+.tile{background:var(--tile);border:0;border-radius:20px;padding:72px 16px 18px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;text-align:left;color:var(--ink);font:inherit;cursor:pointer;position:relative}
 .tile svg.ti{position:absolute;left:16px;top:16px;width:44px;height:44px;color:var(--acc);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tile b{font:600 19px var(--fb)}.tile span{font-size:14px;color:var(--mut)}
 .list{padding:6px 16px}
@@ -57,3 +57,8 @@ body{background:var(--bg)}
 .hist{display:grid;gap:0}.hist .row{padding:12px 0}
 .clk{display:flex;align-items:center;gap:12px}.clk .timer{flex:1}.clk span{width:34px;text-align:right;font-weight:600}
 .timer i{background:var(--acc)}.timer.low i{background:var(--bad)}
+/* language pill (EN | PT) */
+.lang{display:inline-flex;border:1.5px solid var(--acc);border-radius:999px;overflow:hidden;height:40px;align-self:center;justify-self:start}
+.lang button{border:0;background:none;color:var(--ink);font:600 13px var(--fb);padding:0 14px;cursor:pointer;min-width:42px}
+.lang button.on{background:var(--acc);color:var(--acc-ink)}
+.hdr{grid-template-columns:96px 1fr 96px}.hdr .rb:last-child{justify-self:end}.hdr .rb:first-child{justify-self:start}

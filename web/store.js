@@ -7,6 +7,16 @@ const Store={d:null,ref:null,mode:'local',booted:false,late:false,noCloudWrite:f
     if(!Array.isArray(d.F))d.F=[];if(!Array.isArray(d.seen))d.seen=[];
     return d;
   },
+  importData(inc,how){
+    inc=this.norm(inc);const cur=this.d;
+    if(how==='replace'){inc.set=cur.set;this.d=inc;this.save();return}
+    const P=inc.P.total>cur.P.total?inc.P:cur.P;
+    const F=[...new Map([...cur.F,...inc.F].map(x=>[x.t,x])).values()].sort((a,b)=>a.t-b.t).slice(-150);
+    const key=r=>r.join('|');
+    const L=[...new Map([...(cur.L||[]),...(inc.L||[])].map(r=>[key(r),r])).values()].sort((a,b)=>a[0]-b[0]).slice(-4000);
+    const seen=[...new Set([...(cur.seen||[]),...(inc.seen||[])])].slice(-400);
+    this.d=this.norm(Object.assign({},cur,{P,F,L,seen,set:cur.set}));this.save();
+  },
   score(d){return(d.P.total||0)+d.F.length*50},
   initLocal(){
     let d=null;try{d=JSON.parse(localStorage.getItem('iq-state')||'null')}catch(e){}

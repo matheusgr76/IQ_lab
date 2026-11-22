@@ -1,10 +1,10 @@
 // Scoring: 3PL-style IRT with Bayesian (EAP) estimate per domain, then a weighted composite.
 const DOM=[
- {id:'VCI',name:'Verbal Comprehension',w:.25,col:'var(--d0)',blurb:'Vocabulary, similarities, general knowledge, analogies.'},
- {id:'VSI',name:'Visual Spatial',w:.2,col:'var(--d1)',blurb:'Matrix puzzles and mental rotation of shapes.'},
- {id:'FRI',name:'Fluid Reasoning',w:.25,col:'var(--d2)',blurb:'Number series and logic problems.'},
- {id:'WMI',name:'Working Memory',w:.15,col:'var(--d3)',blurb:'Digits forward and backward, number-letter sequencing.'},
- {id:'PSI',name:'Processing Speed',w:.15,col:'var(--d4)',blurb:'Symbol coding and symbol search against the clock.'}
+ {id:'VCI',get name(){return t('Verbal Comprehension')},w:.25,col:'var(--d0)',get blurb(){return t('Vocabulary, similarities, general knowledge, analogies.')}},
+ {id:'VSI',get name(){return t('Visual Spatial')},w:.2,col:'var(--d1)',get blurb(){return t('Matrix puzzles and mental rotation of shapes.')}},
+ {id:'FRI',get name(){return t('Fluid Reasoning')},w:.25,col:'var(--d2)',get blurb(){return t('Number series and logic problems.')}},
+ {id:'WMI',get name(){return t('Working Memory')},w:.15,col:'var(--d3)',get blurb(){return t('Digits forward and backward, number-letter sequencing.')}},
+ {id:'PSI',get name(){return t('Processing Speed')},w:.15,col:'var(--d4)',get blurb(){return t('Symbol coding and symbol search against the clock.')}}
 ];
 const A_DISC=1.2;
 // Extra uncertainty (SD units) from item calibration: smaller where ICAR anchors exist, larger where none do (judgement values).
@@ -25,7 +25,7 @@ function eap(rec){
 }
 const phi=z=>{const t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2),p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p};
 const iqOf=t=>clamp(100+15*t,40,160);
-function band(iq){return iq>=130?'Very superior range':iq>=120?'Superior range':iq>=110?'High average range':iq>=90?'Average range':iq>=80?'Low average range':iq>=70?'Borderline range':'Extremely low range'}
+function band(iq){return t(iq>=130?'Very superior range':iq>=120?'Superior range':iq>=110?'High average range':iq>=90?'Average range':iq>=80?'Low average range':iq>=70?'Borderline range':'Extremely low range')}
 
 function report(rec){
   const out={dom:{},tested:0,n:0};let sw=0,st=0,sv=0;

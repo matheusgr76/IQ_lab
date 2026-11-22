@@ -42,14 +42,14 @@ function step(){
 }
 function intro(id){
   const d=dinfo(id);
-  set(`<div class="top"><button class="ic" data-a="quit" aria-label="Quit">✕</button><div class="prog"><i style="width:${S.i/S.queue.length*100}%"></i></div></div>
-  <div class="card" style="border-top:4px solid ${d.col}"><div class="tag">Next section</div><h2>${d.name}</h2><p class="mut" style="margin-top:8px">${d.blurb}</p><p class="small mut" style="margin-top:8px">Items get harder as you go. If you are unsure, give your best answer.</p></div>`+foot(`<button class="btn pri" data-a="begin">Begin</button>`));
+  set(`<div class="top"><button class="ic" data-a="quit" aria-label="${t('Quit')}">✕</button><div class="prog"><i style="width:${S.i/S.queue.length*100}%"></i></div></div>
+  <div class="card" style="border-top:4px solid ${d.col}"><div class="tag">${t('Next section')}</div><h2>${d.name}</h2><p class="mut" style="margin-top:8px">${d.blurb}</p><p class="small mut" style="margin-top:8px">${t('Items get harder as you go. If you are unsure, give your best answer.')}</p></div>`+foot(`<button class="btn pri" data-a="begin">${t('Begin')}</button>`));
 }
 function hdr(){
   const d=S.item.dom;
-  if(S.mode==='full')return`<div class="top"><button class="ic" data-a="quit" aria-label="Quit">✕</button><div class="prog"><i style="width:${S.i/S.queue.length*100}%"></i></div><span class="chip">${d} ${S.i+1}/${S.queue.length}</span></div>`;
+  if(S.mode==='full')return`<div class="top"><button class="ic" data-a="quit" aria-label="${t('Quit')}">✕</button><div class="prog"><i style="width:${S.i/S.queue.length*100}%"></i></div><span class="chip">${d} ${S.i+1}/${S.queue.length}</span></div>`;
   const P=Store.d.P;
-  return`<div class="top"><button class="ic" data-a="quit" aria-label="Stop">✕</button><span class="chip">${d}</span><span class="mut small mono" style="flex:1;text-align:right">IQ ${puzIQ(P).toFixed(1)} · streak ${P.streak}</span></div>`;
+  return`<div class="top"><button class="ic" data-a="quit" aria-label="${t('Stop')}">✕</button><span class="chip">${d}</span><span class="mut small mono" style="flex:1;text-align:right">IQ ${puzIQ(P).toFixed(1)} · ${t('streak')} ${P.streak}</span></div>`;
 }
 function draw(){S.timedOut=false;S.t_in=0;S.t_item=Date.now();const t=S.item.type;t==='mc'?drawMC():t==='wm'?drawWM():drawSpeed()}
 
@@ -78,9 +78,9 @@ function puzResolve(ok,dIQ){
 }
 function fbBlock(){
   const L=S.last,P=Store.d.P;
-  return`<div class="card fb"><div class="d ${L.ok?'good':'miss'}">${sgn(L.dIQ)}</div><h2>${S.item.type==='speed'?(L.ok?'Faster than typical':'Slower than typical'):L.ok?'Correct':S.timedOut?'Time’s up':'Incorrect'}</h2><p class="mut">${L.sec.toFixed(0)} s · Puzzle IQ <b class="mono" style="color:var(--ink)">${puzIQ(P).toFixed(1)}</b> · streak ${P.streak}</p></div>`;
+  return`<div class="card fb"><div class="d ${L.ok?'good':'miss'}">${sgn(L.dIQ)}</div><h2>${t(S.item.type==='speed'?(L.ok?'Faster than typical':'Slower than typical'):L.ok?'Correct':S.timedOut?'Time’s up':'Incorrect')}</h2><p class="mut">${L.sec.toFixed(0)} s · ${t('Puzzle IQ')} <b class="mono" style="color:var(--ink)">${puzIQ(P).toFixed(1)}</b> · ${t('streak')} ${P.streak}</p></div>`;
 }
-const fbFoot=()=>foot(`<button class="btn" style="flex:1" data-a="stop">Stop</button><button class="btn pri" style="flex:2" data-a="adv">Next puzzle</button>`);
+const fbFoot=()=>foot(`<button class="btn" style="flex:1" data-a="stop">${t('Stop')}</button><button class="btn pri" style="flex:2" data-a="adv">${t('Next puzzle')}</button>`);
 function fbCard(){set(hdr()+fbBlock()+fbFoot())}
 
 /* ---- multiple choice ---- */
@@ -88,19 +88,19 @@ function drawMC(fb){
   const it=S.item,cls=it.layout==='list'?'':it.layout;
   const o=it.opts.map((h,i)=>{let c='opt';if(fb){if(i===it.a&&(S.sel===i||Store.d.set.show))c+=' right';else if(i===S.sel)c+=' wrong'}else if(i===S.sel)c+=' sel';return`<button class="${c}" ${fb?'disabled':`data-a="opt" data-i="${i}"`}>${h}</button>`}).join('');
   const sec=limitFor(it),tm=!fb&&timed();
-  set(hdr()+(tm?clk(sec):'')+`<div class="card">${it.stim}</div><div class="opts ${cls}">${o}</div>`+(fb?fbBlock()+fbFoot():foot(`<button class="btn pri" id="nx" data-a="next" ${S.sel===null?'disabled':''}>${S.mode==='puz'?'Submit':'Next'}</button>`)));
+  set(hdr()+(tm?clk(sec):'')+`<div class="card">${it.stim}</div><div class="opts ${cls}">${o}</div>`+(fb?fbBlock()+fbFoot():foot(`<button class="btn pri" id="nx" data-a="next" ${S.sel===null?'disabled':''}>${t(S.mode==='puz'?'Submit':'Next')}</button>`)));
   if(tm)startClock(sec,()=>answered(S.sel!==null&&S.sel===it.a));
 }
 
 /* ---- working memory ---- */
-const WM_TXT={F:'Repeat the digits in the same order.',B:'Enter the digits in reverse order.',L:'Enter the numbers from lowest to highest, then the letters in alphabetical order.'};
+const WM_TXT=()=>({F:t('Repeat the digits in the same order.'),B:t('Enter the digits in reverse order.'),L:t('Enter the numbers from lowest to highest, then the letters in alphabetical order.')});
 function drawWM(){
   const it=S.item;
-  set(hdr()+`<div class="card"><div class="tag">Working memory · ${it.seq.length} items</div><p class="q">${WM_TXT[it.kind]}</p><p class="small mut" style="margin-top:8px">Items appear one at a time, then you type your answer. Do not write them down.</p></div>`+foot(`<button class="btn pri" data-a="wmgo">Start</button>`));
+  set(hdr()+`<div class="card"><div class="tag">${t('Working memory · {0} items',it.seq.length)}</div><p class="q">${WM_TXT()[it.kind]}</p><p class="small mut" style="margin-top:8px">${t('Items appear one at a time, then you type your answer. Do not write them down.')}</p></div>`+foot(`<button class="btn pri" data-a="wmgo">${t('Start')}</button>`));
 }
 function wmShow(){
   const it=S.item;
-  set(hdr()+`<div class="card"><div class="tag">Watch closely</div><div class="big" id="bg"></div></div>`);
+  set(hdr()+`<div class="card"><div class="tag">${t('Watch closely')}</div><div class="big" id="bg"></div></div>`);
   const bg=document.getElementById('bg');
   it.seq.forEach((ch,k)=>{later(()=>{bg.textContent=ch},400+k*1000);later(()=>{bg.textContent=''},1200+k*1000)});
   later(wmInput,400+it.seq.length*1000);
@@ -109,7 +109,7 @@ function wmInput(){
   const it=S.item,L=it.kind==='L';S.ent=[];
   const keys=L?'123456789BDFGHKLMPRST'.split(''):'0123456789'.split('');
   const sec=limitFor(it),tm=timed();S.t_in=Date.now();
-  set(hdr()+(tm?clk(sec):'')+`<div class="card"><p class="small mut">${WM_TXT[it.kind]}</p><div class="entry" id="en" style="margin-top:10px"></div></div><div class="keypad">${keys.map(k=>`<button class="key" data-a="key" data-k="${k}">${k}</button>`).join('')}</div>`+foot(`<button class="btn" style="flex:1" data-a="back">Delete</button><button class="btn pri" style="flex:2" id="sb" data-a="wmsub" disabled>Submit</button>`));
+  set(hdr()+(tm?clk(sec):'')+`<div class="card"><p class="small mut">${WM_TXT()[it.kind]}</p><div class="entry" id="en" style="margin-top:10px"></div></div><div class="keypad">${keys.map(k=>`<button class="key" data-a="key" data-k="${k}">${k}</button>`).join('')}</div>`+foot(`<button class="btn" style="flex:1" data-a="back">${t('Delete')}</button><button class="btn pri" style="flex:2" id="sb" data-a="wmsub" disabled>${t('Submit')}</button>`));
   updEn();
   if(tm)startClock(sec,()=>answered(S.ent.join('')===it.ans.join('')));
 }
@@ -117,13 +117,13 @@ function updEn(){document.getElementById('en').innerHTML=S.ent.map(c=>`<span>${c
 
 /* ---- processing speed ---- */
 function drawSpeed(){
-  const it=S.item,t=it.kind==='C'?'Symbol coding':'Symbol search',
-  x=it.kind==='C'?'Each symbol has a number. Tap the number that matches the symbol shown, as fast as you can without errors.':'Two target symbols are shown on the left. Tap YES if either one appears in the row on the right, otherwise NO.';
-  set(hdr()+`<div class="card"><div class="tag">${t} · ${it.dur} seconds</div><p class="q">${x}</p></div>`+foot(`<button class="btn pri" data-a="spgo">Start</button>`));
+  const it=S.item,ttl=t(it.kind==='C'?'Symbol coding':'Symbol search'),
+  x=t(it.kind==='C'?'Each symbol has a number. Tap the number that matches the symbol shown, as fast as you can without errors.':'Two target symbols are shown on the left. Tap YES if either one appears in the row on the right, otherwise NO.');
+  set(hdr()+`<div class="card"><div class="tag">${t('{0} · {1} seconds',ttl,it.dur)}</div><p class="q">${x}</p></div>`+foot(`<button class="btn pri" data-a="spgo">${t('Start')}</button>`));
 }
 function speedRun(){
   const it=S.item;S.c=0;S.w=0;S.perm=shuf([0,1,2,3,4,5,6,7,8]);
-  const keypad=it.kind==='C'?`<div class="keypad n3">${[1,2,3,4,5,6,7,8,9].map(k=>`<button class="key" style="height:60px" data-a="tap" data-k="${k}">${k}</button>`).join('')}</div>`:`<div class="opts grid2"><button class="opt" style="justify-content:center;min-height:64px" data-a="tap" data-k="1">YES</button><button class="opt" style="justify-content:center;min-height:64px" data-a="tap" data-k="0">NO</button></div>`;
+  const keypad=it.kind==='C'?`<div class="keypad n3">${[1,2,3,4,5,6,7,8,9].map(k=>`<button class="key" style="height:60px" data-a="tap" data-k="${k}">${k}</button>`).join('')}</div>`:`<div class="opts grid2"><button class="opt" style="justify-content:center;min-height:64px" data-a="tap" data-k="1">${t('YES')}</button><button class="opt" style="justify-content:center;min-height:64px" data-a="tap" data-k="0">${t('NO')}</button></div>`;
   const key=it.kind==='C'?`<div class="keyrow" style="margin-top:12px">${S.perm.map((s,k)=>`<div>${symSVG(s)}${k+1}</div>`).join('')}</div>`:'';
   set(hdr()+`<div class="card"><div class="timer"><i id="tm" style="width:100%"></i></div>${key}<div id="tr" style="margin-top:12px"></div></div>${keypad}`);
   trial();
@@ -148,18 +148,18 @@ function speedDone(){
 /* ---- full-test results ---- */
 function results(){
   clear();const R=report(S.rec);
-  if(!R.tested){set(`<div class="card"><h2>No answers</h2></div>`+foot(`<button class="btn pri" data-a="go" data-t="test">Back</button>`));return}
+  if(!R.tested){set(`<div class="card"><h2>${t('No answers')}</h2></div>`+foot(`<button class="btn pri" data-a="go" data-t="test">${t('Back')}</button>`));return}
   const F=Store.d.F;F.push({t:Math.round(Date.now()/1000),fsiq:R.fsiq,lo:R.lo,hi:R.hi,m:Math.round((Date.now()-S.t0)/60000),dom:Object.fromEntries(Object.entries(R.dom).map(([k,v])=>[k,Math.round(v.iq)])),n:R.n});
   if(F.length>150)F.splice(0,F.length-150);
   saveSeen();Store.save();
-  const pos=v=>(clamp(v,55,145)-55)/90*100,pct=R.pct<1?'under 1':R.pct>99?'over 99':Math.round(R.pct);
+  const pos=v=>(clamp(v,55,145)-55)/90*100,pct=R.pct<1?t('under 1'):R.pct>99?t('over 99'):Math.round(R.pct);
   const rows=DOM.map(d=>{const x=R.dom[d.id];return x?`<tr><td><span class="dot" style="background:${d.col};display:inline-block;margin-right:8px"></span>${d.name}<div class="mini"><i style="width:${pos(x.iq)}%;background:${d.col}"></i></div></td><td class="mono"><b>${Math.round(x.iq)}</b></td><td class="mono mut">±${Math.round(1.96*x.se)}</td></tr>`:''}).join('');
-  S.copy=`IQ Lab full test: FSIQ ${R.fsiq} (95% range ${R.lo}-${R.hi}), ${R.label}. `+DOM.filter(d=>R.dom[d.id]).map(d=>`${d.id} ${Math.round(R.dom[d.id].iq)}`).join(', ')+'. Uncalibrated estimate.';
-  set(`<div class="card" style="text-align:center;padding:20px 16px"><div class="tag">Full test · estimated IQ</div><div class="iq">${R.fsiq}</div><p style="margin-top:6px"><b>${R.label}</b></p><p class="small mut">95% range ${R.lo}–${R.hi} · above about ${pct}% of people if norms held · ${Math.round((Date.now()-S.t0)/60000)} min</p>
+  S.copy=t('IQ Lab full test: FSIQ {0} (95% range {1}-{2}), {3}. ',R.fsiq,R.lo,R.hi,R.label)+DOM.filter(d=>R.dom[d.id]).map(d=>`${d.id} ${Math.round(R.dom[d.id].iq)}`).join(', ')+'. '+t('Uncalibrated estimate.');
+  set(`<div class="card" style="text-align:center;padding:20px 16px"><div class="tag">${t('Full test · estimated IQ')}</div><div class="iq">${R.fsiq}</div><p style="margin-top:6px"><b>${R.label}</b></p><p class="small mut">${t('95% range {0}–{1}',R.lo,R.hi)} · ${t('above about {0}% of people if norms held',pct)} · ${Math.round((Date.now()-S.t0)/60000)} min</p>
   <div class="scale"><div class="tr"></div><div class="bd" style="left:${pos(R.lo)}%;width:${pos(R.hi)-pos(R.lo)}%"></div><div class="mk" style="left:${pos(R.fsiq)}%"></div></div><div class="ticks"><span>55</span><span>70</span><span>85</span><span>100</span><span>115</span><span>130</span><span>145</span></div></div>
-  <div class="card" style="padding:12px 16px"><h3>Index scores</h3><table><tr><th>Domain</th><th>Index</th><th>95%</th></tr>${rows}</table></div>
-  <div class="card small mut" style="padding:14px 16px">Not a norm-referenced or clinical score. Matrix, series and logic difficulty is anchored to ICAR data (1,525 people, a self-selected online sample). Verbal, rotation, memory and speed are not anchored. The range includes extra uncertainty from calibration.</div>`
-  +foot(`<button class="btn" id="cp" data-a="copy">Copy summary</button><button class="btn pri" data-a="go" data-t="stats">See stats</button>`));
+  <div class="card" style="padding:12px 16px"><h3>${t('Index scores')}</h3><table><tr><th>${t('Domain')}</th><th>${t('Index')}</th><th>95%</th></tr>${rows}</table></div>
+  <div class="card small mut" style="padding:14px 16px">${t('Not a norm-referenced or clinical score. Matrix, series and logic difficulty is anchored to ICAR data (1,525 people, a self-selected online sample). Verbal, rotation, memory and speed are not anchored. The range includes extra uncertainty from calibration.')}</div>`
+  +foot(`<button class="btn" id="cp" data-a="copy">${t('Copy summary')}</button><button class="btn pri" data-a="go" data-t="stats">${t('See stats')}</button>`));
 }
 
 /* ---- actions ---- */
@@ -176,9 +176,9 @@ Object.assign(A,{
   spgo:speedRun,
   tap(t){const k=+t.dataset.k,it=S.item;let ok;if(it.kind==='C')ok=S.perm[k-1]===S.cur;else ok=(k===1)===S.has;ok?S.c++:S.w++;trial()},
   adv:step,
-  quit(){if(S&&S.clk)S.clk.pause=Date.now();sheet(S.mode==='puz'?`<h3>Stop here?</h3><p class="mut small">Your puzzle IQ is saved after every answer.</p><button class="btn pri" data-a="stop">Stop</button><button class="btn" data-a="keep">Keep going</button>`:`<h3>Leave the full test?</h3><p class="mut small">Your answers so far will be lost.</p><button class="btn" data-a="keep">Keep going</button><button class="btn pri" data-a="leave">Leave</button>`)},
+  quit(){if(S&&S.clk)S.clk.pause=Date.now();sheet(S.mode==='puz'?`<h3>${t('Stop here?')}</h3><p class="mut small">${t('Your puzzle IQ is saved after every answer.')}</p><button class="btn pri" data-a="stop">${t('Stop')}</button><button class="btn" data-a="keep">${t('Keep going')}</button>`:`<h3>${t('Leave the full test?')}</h3><p class="mut small">${t('Your answers so far will be lost.')}</p><button class="btn" data-a="keep">${t('Keep going')}</button><button class="btn pri" data-a="leave">${t('Leave')}</button>`)},
   keep(){closeSheet();if(S&&S.clk&&S.clk.pause){S.clk.end+=Date.now()-S.clk.pause;S.clk.pause=0}},
   stop(){closeSheet();clear();const g=S.gain,n=S.n;S=null;go('puz',{n,g})},
   leave(){closeSheet();clear();S=null;go('test')},
-  copy(){const b=document.getElementById('cp');try{navigator.clipboard.writeText(S.copy).then(()=>{b.textContent='Copied'},()=>{b.textContent='Copy blocked'})}catch(e){b.textContent='Copy blocked'}}
+  copy(){copyTxt(document.getElementById('cp'),S.copy,t('Copied'))}
 });

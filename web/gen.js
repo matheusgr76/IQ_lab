@@ -19,7 +19,7 @@ function fromBank(bank,d,used,dom,tagOf){
   let pool=bank.filter(x=>x.d===d&&!used.has(x.id));
   if(!pool.length){bank.filter(x=>x.d===d).forEach(x=>used.delete(x.id));pool=bank.filter(x=>x.d===d)}
   const it=pick(pool);used.add(it.id);
-  const r=mcItem(dom,d,txt(tagOf(it),it.q),it.o,it.a);r.tagk=tagOf(it);return r;
+  const r=mcItem(dom,d,txt(t(tagOf(it)),it.q),it.o,it.a);r.tagk=tagOf(it);return r;
 }
 
 /* ---------- Fluid: number series ---------- */
@@ -42,7 +42,7 @@ function genSeries(d){
   const arr=seriesGen(d),ans=arr[arr.length-1],shown=arr.slice(0,-1),last=shown[shown.length-1],dl=last-shown[shown.length-2];
   const c=[ans+1,ans-1,ans+2,ans-2,last+dl,last*2,ans+10,ans-10,ans+dl,last+1].filter(v=>v!==ans&&Math.abs(v)<5000);
   const opts=[ans,...shuf([...new Set(c)]).slice(0,4)];
-  return mcItem('FRI',d,txt('Number series','Which number comes next?')+`<p class="big mono" style="font-size:26px;line-height:1.5;min-height:0;margin-top:10px;letter-spacing:0">${shown.join(', ')}, ?</p>`,opts.map(String),0,'grid3');
+  return mcItem('FRI',d,txt(t('Number series'),t('Which number comes next?'))+`<p class="big mono" style="font-size:26px;line-height:1.5;min-height:0;margin-top:10px;letter-spacing:0">${shown.join(', ')}, ?</p>`,opts.map(String),0,'grid3');
 }
 
 /* ---------- Visual: matrix reasoning ---------- */
@@ -66,7 +66,7 @@ function genMatrix(d){
   }
   let g='';
   for(let r=0;r<3;r++)for(let c=0;c<3;c++){const ox=c*65,oy=r*65;g+=`<rect class="cb" x="${ox}" y="${oy}" width="60" height="60" rx="6"/>`;g+=(r===2&&c===2)?`<text x="${ox+30}" y="${oy+40}">?</text>`:cellG(cell(r,c),ox,oy)}
-  const stim=txt('Matrix reasoning','Which piece completes the pattern?')+`<svg class="fig" viewBox="0 0 190 190" style="max-width:300px;margin:12px auto 0">${g}</svg>`;
+  const stim=txt(t('Matrix reasoning'),t('Which piece completes the pattern?'))+`<svg class="fig" viewBox="0 0 190 190" style="max-width:300px;margin:12px auto 0">${g}</svg>`;
   return mcItem('VSI',d,stim,opts.map(c=>`<svg class="fig" viewBox="0 0 60 60">${cellG(c,0,0)}</svg>`),0,'grid3');
 }
 
@@ -92,7 +92,7 @@ function genRot(d){
     const cand=norm(rest.concat([np]));if(conn(cand))add(rotN(cand,rnd(0,3)));
   }
   for(let t=0;t<50&&opts.length<4;t++)add(rotN(mir(sh),rnd(0,3)));
-  const stim=txt('Mental rotation','Which option is the shape below, turned but not flipped?')+`<div style="width:130px;margin:12px auto 0">${polySVG(sh,13)}</div>`;
+  const stim=txt(t('Mental rotation'),t('Which option is the shape below, turned but not flipped?'))+`<div style="width:130px;margin:12px auto 0">${polySVG(sh,13)}</div>`;
   return mcItem('VSI',d,stim,opts.map(c=>polySVG(c)),0,'grid2');
 }
 
@@ -117,9 +117,9 @@ const KN={'VSI:M':'Matrix','VSI:R':'Rotation','FRI:S':'Number series','FRI:T':'L
 const kname=(d,k)=>d==='VCI'?(k||'Verbal'):(KN[d+':'+k]||k||d);
 function makeItem0(s,used){
   switch(s.dom){
-    case'VCI':return fromBank(VERBAL,s.d,used.v,'VCI',x=>x.t);
+    case'VCI':return fromBank(LANG==='pt'?VERBAL_PT:VERBAL,s.d,used.v,'VCI',x=>x.t);
     case'VSI':return s.kind==='R'?genRot(s.d):genMatrix(s.d);
-    case'FRI':return s.kind==='B'?fromBank(LOGIC,s.d,used.l,'FRI',()=>'Logic'):s.kind==='O'?genOrder(s.d):s.kind==='T'?genLetters(s.d):genSeries(s.d);
+    case'FRI':return s.kind==='B'?fromBank(LANG==='pt'?LOGIC_PT:LOGIC,s.d,used.l,'FRI',()=>'Logic'):s.kind==='O'?genOrder(s.d):s.kind==='T'?genLetters(s.d):genSeries(s.d);
     case'WMI':return genWM(s.kind,s.d);
     default:return{type:'speed',dom:'PSI',kind:s.kind,dur:s.dur};
   }
