@@ -1,0 +1,7 @@
+android/keys/
+android/build/
+android/node_modules/
+releases/IQ-Lab-local.apk
+*.pem
+*.jks
+*.keystore
