@@ -27,7 +27,9 @@ Screenshots use simulated demo answers.
 
 **Android (APK):** download [`releases/IQ-Lab-v1.1.apk`](releases/IQ-Lab-v1.1.apk), open it, allow installs from that source once. Works offline. Scores stay on the device. Uninstalling or clearing app data deletes them, so export now and then.
 
-**Browser:** open `web/index.html`, or serve the `web/` folder from any static host (for example GitHub Pages). Scores are saved in the browser's local storage.
+**Browser (any phone or computer, including iPhone):** open https://matheusgr76.github.io/IQ_lab/ and use "Add to Home screen" in the browser menu. Scores are saved in that browser's local storage. To run it locally, open `web/index.html`.
+
+_Hosting note:_ the page is served by GitHub Pages from the repo root (`index.html` redirects to `web/`). Enable it under Settings → Pages → Branch `main`, folder `/ (root)`.
 
 ## Build the APK
 
